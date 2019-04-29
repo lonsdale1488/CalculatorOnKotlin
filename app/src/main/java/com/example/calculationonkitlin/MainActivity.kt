@@ -1,19 +1,26 @@
 package com.example.calculationonkitlin
 
+import android.annotation.SuppressLint
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), View.OnClickListener, IMainView {
+    val MENU_EXIT = 1
+    val MENU_REMUVHISTORY = 2
+    override fun setAdapter(arrayList: ArrayList<String>) {
+        var ArrayAdapter = ArrayAdapter(this,R.layout.item,arrayList)
+        history.setAdapter(ArrayAdapter)
+    }
+
     override fun showtext(string: String) {
         tvResult.text = string
     }
-
-//    override fun showtekst() {
-//        tvResult.text = presenter.textLine
-//    }
 
 
     private val presenter = MainPresenter(this)
@@ -66,8 +73,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, IMainView {
             R.id.zero -> presenter.plusLine('0')
             R.id.dot -> presenter.plusLine('.')
             R.id.delete -> presenter.deleteAll()
-           R.id.ligthDelete-> presenter.deleteLigth()
-            R.id.result -> presenter.actionCalculate()
+           R.id.ligthDelete-> presenter.deleteLastSing()
+            R.id.result -> presenter.getResult()
             R.id.plus -> presenter.plusLine('+')
             R.id.minus -> presenter.plusLine('-')
             R.id.multiply -> presenter.plusLine('*')
@@ -82,6 +89,20 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, IMainView {
         var toast = Toast.makeText(this, "You can not do this", Toast.LENGTH_SHORT).show()
     }
 
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+     when(item!!.itemId)
+     {
+         1-> finish()
+             2->presenter.deleteHistory()
+     }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menu!!.add(0,MENU_EXIT, 0 ,"Вихід")
+        menu!!.add(0,MENU_REMUVHISTORY, 0 ,"Видалити історію")
+        return super.onCreateOptionsMenu(menu)
+    }
 }
 
 

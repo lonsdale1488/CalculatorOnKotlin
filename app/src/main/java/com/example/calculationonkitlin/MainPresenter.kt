@@ -4,7 +4,7 @@ import android.util.Log
 
 class MainPresenter(var view: IMainView) {
 
-    ///private val model by lazy { MainModel(this) }
+    private val model by lazy { MainModel(this) }
 
     var textLine: String = "0"
     var LOGTAG = "MainPresenter"
@@ -16,6 +16,8 @@ class MainPresenter(var view: IMainView) {
     var string3 = ""
     var firstText = ""
     var lastText = ""
+
+
 
 
     fun deleteAll() {
@@ -32,7 +34,7 @@ class MainPresenter(var view: IMainView) {
     }
 
 
-    fun deleteLigth() {
+    fun deleteLastSing() {
         var r = 0
         val arrayDeleteLigth = textLine.toCharArray()
         textLine = ""
@@ -48,7 +50,8 @@ class MainPresenter(var view: IMainView) {
     }
 
 
-    fun actionCalculate() {
+    fun getResult() {
+        history(textLine)
         calcult('^')
         calcult('*')
         calcult('/')
@@ -56,7 +59,6 @@ class MainPresenter(var view: IMainView) {
         calcult('+')
         deletelastAction()
         deleteZeroAfteDate()
-
         view.showtext(textLine)
     }
 
@@ -85,7 +87,9 @@ class MainPresenter(var view: IMainView) {
                     var k = i - 1
 
                     // визначаэмо всі цифрові знаки до попереднього знаку до нулю
+
                     while (!findAction(array[k])) {
+
                         string3 = ""
                         string3 += array[k]
                         string1 = string3 + string1
@@ -95,6 +99,7 @@ class MainPresenter(var view: IMainView) {
                         }
                         k--
                     }
+
                     var n = false
                     var m = i + 1
                     while (!findAction(array[m])) {
@@ -134,22 +139,28 @@ class MainPresenter(var view: IMainView) {
                     number2 = string2.toDouble()
                     string1 = ""
                     string2 = ""
-
-
+                    Log.d(LOGTAG, "firstText - $firstText")
+                    Log.d(LOGTAG, "lastText - $lastText")
                     when (action) {
                         '^' -> number3 = Math.pow(number1.toDouble(), number2)
                         '*' -> number3 = number1 * number2
-                        '+' -> number3 = number1 + number2
-                        '-' -> number3 = number1 - number2
+                        '+' -> if(array[0] == '-'){
+                            number3 = -1 * number1 + number2
+                            firstText=""
+                        } else {number3 = number1 + number2}
+
+                        '-' ->  if(array[0] == '-'){
+                            number3 =-1 *  number1 - number2
+                            firstText=""
+                        } else {number3 = number1 - number2}
                         '/' -> number3 = number1 / number2
                     }
                     textLine = ""
                     textLine = firstText + number3.toString() + lastText
                     firstText = ""
                     lastText = ""
-
-                 //   textLine = finalText
                     negativaNumber()
+
                     i = 0
                     Log.d(LOGTAG, "work brek in IF")
                     Log.d(LOGTAG, "textLine + $textLine")
@@ -212,9 +223,17 @@ class MainPresenter(var view: IMainView) {
 
     fun negativaNumber() {
         val arrayNegativeNumber = textLine.toCharArray()
-        var p: Int = 0
+        var p = 0
         textLine = ""
         while (p <= arrayNegativeNumber.size - 1) {
+//            if (arrayNegativeNumber[0] == '-') {
+//
+//                p++
+//                Log.d(LOGTAG, "work  -- ")
+//                continue
+//            }
+//
+
             if (arrayNegativeNumber[p] == '-' && p != arrayNegativeNumber.size - 1) {
                 if (arrayNegativeNumber[p + 1] == '-') {
                     arrayNegativeNumber[p + 1] = '+'
@@ -234,6 +253,13 @@ class MainPresenter(var view: IMainView) {
             textLine = textLine + arrayNegativeNumber[p]
             p++
         }
+
+    }
+    fun history(string: String) {
+        view.setAdapter(model.putResult(string))
+    }
+    fun deleteHistory() {
+        view.setAdapter(model.remuvALL())
 
     }
 
