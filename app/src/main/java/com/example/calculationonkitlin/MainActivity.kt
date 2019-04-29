@@ -1,11 +1,12 @@
 package com.example.calculationonkitlin
 
-import android.annotation.SuppressLint
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
@@ -13,9 +14,22 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity(), View.OnClickListener, IMainView {
     val MENU_EXIT = 1
     val MENU_REMUVHISTORY = 2
+    var LOGTAG = "MainActivity"
+
+
     override fun setAdapter(arrayList: ArrayList<String>) {
-        var ArrayAdapter = ArrayAdapter(this,R.layout.item,arrayList)
-        history.setAdapter(ArrayAdapter)
+        var arrayAdapter = ArrayAdapter(this,R.layout.item,arrayList)
+        history.setAdapter(arrayAdapter)
+        initLisenerAdapter()
+    }
+
+
+
+    fun initLisenerAdapter()
+    {
+        history.setOnItemClickListener { parent, view, position, id ->
+            presenter.gerResult(position)
+        }
     }
 
     override fun showtext(string: String) {
@@ -80,7 +94,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, IMainView {
             R.id.multiply -> presenter.plusLine('*')
             R.id.divate -> presenter.plusLine('/')
             R.id.step -> presenter.plusLine('^')
-            //     R.id.plusminus-> writeSing("2")
+            R.id.plusminus-> presenter.plusMinus()
 
         }
     }

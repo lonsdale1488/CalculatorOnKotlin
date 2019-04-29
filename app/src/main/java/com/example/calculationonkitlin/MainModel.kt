@@ -6,23 +6,22 @@ import android.widget.ArrayAdapter
 import android.widget.ListView
 import java.util.ArrayList
 
-class MainModel   ( var  prenter: MainPresenter) {
+class MainModel(var prenter: MainPresenter) {
 
-    var arrayList = arrayListOf<String>("")
+    var arrayList = arrayListOf<String>()
 
 
+    fun putResult(string: String): ArrayList<String> {
+        arrayList.add(string)
+        return arrayList
+    }
 
-   fun putResult (string:String):ArrayList<String>
-   {
-       arrayList.add(string)
-       return arrayList
-   }
-
-    fun remuvALL ():ArrayList<String>
-    {
+    fun remuvALL(): ArrayList<String> {
         arrayList.clear()
         return arrayList
 
     }
+    fun getItem(position:Int):String { return arrayList.get(position)
 
+    }
 }

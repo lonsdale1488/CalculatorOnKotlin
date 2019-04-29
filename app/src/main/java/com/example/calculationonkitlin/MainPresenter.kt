@@ -18,8 +18,6 @@ class MainPresenter(var view: IMainView) {
     var lastText = ""
 
 
-
-
     fun deleteAll() {
         textLine = "0"
         view.showtext(textLine)
@@ -32,7 +30,6 @@ class MainPresenter(var view: IMainView) {
         view.showtext(textLine)
 
     }
-
 
     fun deleteLastSing() {
         var r = 0
@@ -49,7 +46,6 @@ class MainPresenter(var view: IMainView) {
 
     }
 
-
     fun getResult() {
         history(textLine)
         calcult('^')
@@ -61,7 +57,10 @@ class MainPresenter(var view: IMainView) {
         deleteZeroAfteDate()
         view.showtext(textLine)
     }
-
+    fun gerResult(position:Int) {
+        textLine = model.getItem(position)
+        view.showtext(textLine)
+    }
     fun findAction(char: Char): Boolean {
         if (char == '+' || char == '-' || char == '*' || char == '/' || char == '^') {//Log.d(LOGTAG, " findAction + true")
             return true
@@ -144,15 +143,19 @@ class MainPresenter(var view: IMainView) {
                     when (action) {
                         '^' -> number3 = Math.pow(number1.toDouble(), number2)
                         '*' -> number3 = number1 * number2
-                        '+' -> if(array[0] == '-'){
+                        '+' -> if (array[0] == '-') {
                             number3 = -1 * number1 + number2
-                            firstText=""
-                        } else {number3 = number1 + number2}
+                            firstText = ""
+                        } else {
+                            number3 = number1 + number2
+                        }
 
-                        '-' ->  if(array[0] == '-'){
-                            number3 =-1 *  number1 - number2
-                            firstText=""
-                        } else {number3 = number1 - number2}
+                        '-' -> if (array[0] == '-') {
+                            number3 = -1 * number1 - number2
+                            firstText = ""
+                        } else {
+                            number3 = number1 - number2
+                        }
                         '/' -> number3 = number1 / number2
                     }
                     textLine = ""
@@ -220,19 +223,11 @@ class MainPresenter(var view: IMainView) {
     }
 
 
-
     fun negativaNumber() {
         val arrayNegativeNumber = textLine.toCharArray()
         var p = 0
         textLine = ""
         while (p <= arrayNegativeNumber.size - 1) {
-//            if (arrayNegativeNumber[0] == '-') {
-//
-//                p++
-//                Log.d(LOGTAG, "work  -- ")
-//                continue
-//            }
-//
 
             if (arrayNegativeNumber[p] == '-' && p != arrayNegativeNumber.size - 1) {
                 if (arrayNegativeNumber[p + 1] == '-') {
@@ -255,13 +250,31 @@ class MainPresenter(var view: IMainView) {
         }
 
     }
+
     fun history(string: String) {
         view.setAdapter(model.putResult(string))
     }
+
     fun deleteHistory() {
         view.setAdapter(model.remuvALL())
 
     }
 
+
+    fun plusMinus ()
+    {
+        if(textLine.get(0)=='-'){
+            var i=1
+            val arrayPlusMinus = textLine.toCharArray()
+            textLine = ""
+            while (i <= arrayPlusMinus.size - 1) {
+                textLine = textLine + arrayPlusMinus[i]
+                i++
+            }
+        }else {
+            textLine = '-' + textLine
+        }
+        view.showtext(textLine)
+    }
 }
 
