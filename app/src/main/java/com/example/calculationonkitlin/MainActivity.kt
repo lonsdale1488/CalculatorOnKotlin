@@ -6,27 +6,24 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), View.OnClickListener, IMainView {
+
+
     val MENU_EXIT = 1
     val MENU_REMUVHISTORY = 2
-    var LOGTAG = "MainActivity"
-
+    var LOG_TAG = "MainActivity"
 
     override fun setAdapter(arrayList: ArrayList<String>) {
-        var arrayAdapter = ArrayAdapter(this,R.layout.item,arrayList)
+        var arrayAdapter = ArrayAdapter(this, R.layout.item, arrayList)
         history.setAdapter(arrayAdapter)
         initLisenerAdapter()
     }
 
-
-
-    fun initLisenerAdapter()
-    {
+    fun initLisenerAdapter() {
         history.setOnItemClickListener { parent, view, position, id ->
             presenter.gerResult(position)
         }
@@ -46,6 +43,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, IMainView {
     override fun onResume() {
         super.onResume()
         initLisener()
+        Log.d(LOG_TAG, "onResume ")
     }
 
 
@@ -87,14 +85,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, IMainView {
             R.id.zero -> presenter.plusLine('0')
             R.id.dot -> presenter.plusLine('.')
             R.id.delete -> presenter.deleteAll()
-           R.id.ligthDelete-> presenter.deleteLastSing()
+            R.id.ligthDelete -> presenter.deleteLastSing()
             R.id.result -> presenter.getResult()
             R.id.plus -> presenter.plusLine('+')
             R.id.minus -> presenter.plusLine('-')
             R.id.multiply -> presenter.plusLine('*')
             R.id.divate -> presenter.plusLine('/')
             R.id.step -> presenter.plusLine('^')
-            R.id.plusminus-> presenter.plusMinus()
+            R.id.plusminus -> presenter.plusMinus()
 
         }
     }
@@ -104,19 +102,36 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, IMainView {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-     when(item!!.itemId)
-     {
-         1-> finish()
-             2->presenter.deleteHistory()
-     }
+        when (item!!.itemId) {
+            1 -> finish()
+            2 -> presenter.deleteHistory()
+        }
         return super.onOptionsItemSelected(item)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menu!!.add(0,MENU_EXIT, 0 ,"Вихід")
-        menu!!.add(0,MENU_REMUVHISTORY, 0 ,"Видалити історію")
+        menu!!.add(0, MENU_EXIT, 0, "Вихід")
+        menu!!.add(0, MENU_REMUVHISTORY, 0, "Видалити історію")
         return super.onCreateOptionsMenu(menu)
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putString("val", presenter.saveText())
+        outState.putStringArrayList("list", presenter.saveList())
+        super.onSaveInstanceState(outState)
+
+    }
+
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        showtext(savedInstanceState.getString("val")!!)
+        setAdapter(savedInstanceState.getStringArrayList("list")!!)
+    //    presenter.saveText()
+        Log.d(LOG_TAG, "onRestoreInstanceState")
+    }
+
+
 }
 
 

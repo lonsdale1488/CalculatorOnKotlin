@@ -276,5 +276,16 @@ class MainPresenter(var view: IMainView) {
         }
         view.showtext(textLine)
     }
+
+    fun saveList():ArrayList<String>
+    {
+     return  model.arrayList
+    }
+
+    fun saveText():String
+    {
+        return textLine
+    }
+
 }
 
